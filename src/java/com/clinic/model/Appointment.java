@@ -7,6 +7,8 @@ public class Appointment {
     private String appointmentDate;
     private String status;
     private String treatmentType;
+    private String patientName;
+    private String dentistName;
 
     public Appointment() {}
 
@@ -23,4 +25,8 @@ public class Appointment {
     public void setStatus(String status) { this.status = status; }
     public String getTreatmentType() { return treatmentType; }
     public void setTreatmentType(String treatmentType) { this.treatmentType = treatmentType; }
+    public String getPatientName() { return patientName; }
+    public void setPatientName(String patientName) { this.patientName = patientName; }
+    public String getDentistName() { return dentistName; }
+    public void setDentistName(String dentistName) { this.dentistName = dentistName; }
 }

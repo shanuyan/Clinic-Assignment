@@ -38,4 +38,17 @@ public class UserDAO {
         }
         return null;
     }
+
+    public int getUserIdByUsername(String username) {
+        String query = "SELECT id FROM users WHERE username = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt("id");
+        } catch (SQLException e) { 
+            e.printStackTrace(); 
+        }
+        return -1;
+    }
 }

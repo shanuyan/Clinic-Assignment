@@ -5,6 +5,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 @WebListener
@@ -67,6 +68,16 @@ public class DBInitializer implements ServletContextListener {
                     "bill_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                     "qr_code VARCHAR(255), " +
                     "FOREIGN KEY (appointment_id) REFERENCES appointments(id))");
+
+            // Seed Default Users if none exist
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM users");
+            if (rs.next() && rs.getInt(1) == 0) {
+                stmt.execute("INSERT INTO users (username, password, role, full_name) VALUES " +
+                        "('admin', 'admin123', 'ADMIN', 'System Admin'), " +
+                        "('doctor1', 'doc123', 'DENTIST', 'Dr. Arul'), " +
+                        "('staff1', 'staff123', 'STAFF', 'Receptionist Jane')");
+                System.out.println("Default users seeded.");
+            }
 
             System.out.println("Database tables created successfully.");
         } catch (Exception e) {

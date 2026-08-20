@@ -59,9 +59,9 @@
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=Bill_<%= System.currentTimeMillis() %>" alt="QR Code">
             <p><small>Scan to view treatment history</small></p>
         </div>
-        <div class="mt-4 text-center no-print">
-            <button onclick="window.print()" class="btn btn-primary">Print Receipt</button>
-            <a href="dashboard.jsp" class="btn btn-secondary">Back</a>
+        <div class="mt-4 text-center no-print d-flex justify-content-center gap-2">
+            <button onclick="window.print()" class="btn btn-primary px-4">Print Receipt</button>
+            <a href="dashboard.jsp" class="btn-secondary-soft px-4">Exit to Overview</a>
         </div>
     </div>
 </body>

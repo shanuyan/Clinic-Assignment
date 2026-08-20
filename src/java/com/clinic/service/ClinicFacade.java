@@ -54,6 +54,24 @@ public class ClinicFacade {
         return appointmentDAO.addAppointment(appt);
     }
 
+    public int getTodayAppointmentCount() throws Exception {
+        // Simple logic for now: count all from DB
+        return appointmentDAO.getAppointmentsByPatient(0).size(); 
+    }
+
+    public List<Appointment> getLiveFeed() throws Exception {
+        return appointmentDAO.getLatestAppointments(5);
+    }
+
+    public Appointment searchAppointment(int id) throws Exception {
+        return appointmentDAO.getAppointmentById(id);
+    }
+
+    public List<Appointment> getDentistAppointments(String username) throws Exception {
+        int id = userDAO.getUserIdByUsername(username);
+        return appointmentDAO.getAppointmentsByDentist(id);
+    }
+
     public double getTreatmentCost(String treatment) throws Exception {
         java.util.Map<String, Double> prices = serviceDAO.getServicePrices();
         return prices.getOrDefault(treatment, 0.0) + prices.getOrDefault("Consultation", 1000.0);

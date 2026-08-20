@@ -13,6 +13,15 @@ import java.io.IOException;
 public class AuthServlet extends HttpServlet {
     private ClinicFacade facade = new ClinicFacade();
 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
+        if ("logout".equals(action)) {
+            request.getSession().invalidate();
+            response.sendRedirect("index.html");
+        }
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
@@ -28,7 +37,19 @@ public class AuthServlet extends HttpServlet {
                 session.setAttribute("user", user);
                 session.setAttribute("role", role);
                 
-                response.sendRedirect("dashboard.jsp");
+                switch (role) {
+                    case "ADMIN":
+                        response.sendRedirect("admin_dashboard.jsp");
+                        break;
+                    case "DENTIST":
+                        response.sendRedirect("dentist_dashboard.jsp");
+                        break;
+                    case "STAFF":
+                        response.sendRedirect("staff_dashboard.jsp");
+                        break;
+                    default:
+                        response.sendRedirect("index.html?error=unauthorized");
+                }
             } else {
                 response.sendRedirect("index.html?error=invalid");
             }
