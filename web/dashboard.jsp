@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-theme="light">
+<body>
     <%@ include file="includes/header.jsp" %>
 
     <%
@@ -38,29 +38,29 @@
     <div class="row g-4 mb-5">
         <div class="col-md-4">
             <div class="card p-5 border-0 shadow-sm">
-                <div class="stat-label">Total Records</div>
+                <div class="stat-label">Daily Visits</div>
                 <div class="stat-value text-primary"><%= totalAppts %></div>
-                <div class="small text-success fw-medium">Database is active</div>
+                <div class="small text-success fw-medium">↑ 5% vs yesterday</div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card p-5 border-0 shadow-sm">
-                <div class="stat-label">Active Staff</div>
-                <div class="stat-value text-warning">03</div>
-                <div class="small text-muted fw-medium">Role-based access active</div>
+                <div class="stat-label">Urgent Cases</div>
+                <div class="stat-value text-warning">02</div>
+                <div class="small text-muted fw-medium">Requiring immediate attention</div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card p-5 border-0 shadow-sm">
-                <div class="stat-label">System Health</div>
-                <div class="stat-value text-dark">100%</div>
-                <div class="small text-success fw-medium">All services online</div>
+                <div class="stat-label">Pending Clearances</div>
+                <div class="stat-value text-dark">04</div>
+                <div class="small text-success fw-medium">Ready for billing</div>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
             <div class="card p-4 mb-4 border-0 shadow-sm">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h5 class="fw-bold m-0">Live Patient Feed</h5>
@@ -88,18 +88,11 @@
                                 <td><span class="badge bg-success-subtle text-success border border-success-subtle px-2"><%= a.getStatus() %></span></td>
                             </tr>
                             <% } } else { %>
-                            <tr><td colspan="5" class="text-center text-muted">No recent records found in database.</td></tr>
+                            <tr><td colspan="5" class="text-center text-muted py-4">No recent records found in database.</td></tr>
                             <% } %>
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card p-4 bg-primary text-white border-0 shadow-lg">
-                <h5 class="fw-bold mb-3">Professional Insight</h5>
-                <p class="small opacity-75">All data shown here is retrieved directly from the MySQL <code>dental_clinic</code> database using the DAO and Facade design patterns.</p>
-                <a href="search.jsp" class="btn btn-light btn-sm fw-bold mt-2">Search Full Registry</a>
             </div>
         </div>
     </div>

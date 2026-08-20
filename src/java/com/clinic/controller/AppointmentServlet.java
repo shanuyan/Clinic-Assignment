@@ -19,18 +19,26 @@ public class AppointmentServlet extends HttpServlet {
         
         try {
             if ("register".equals(action)) {
-                String name = request.getParameter("name");
-                String address = request.getParameter("address");
-                String phone = request.getParameter("phone");
-                String dentistIdStr = request.getParameter("dentistId");
-                String date = request.getParameter("date");
-                String treatment = request.getParameter("treatment");
-                
-                int patientId = facade.registerPatient(name, address, phone);
+                String mode = request.getParameter("intake_mode");
+                int patientId = -1;
+
+                if ("EXISTING".equals(mode)) {
+                    patientId = Integer.parseInt(request.getParameter("existing_patient_id"));
+                } else {
+                    int customId = Integer.parseInt(request.getParameter("new_patient_id"));
+                    String name = request.getParameter("name");
+                    String address = request.getParameter("address");
+                    String phone = request.getParameter("phone");
+                    patientId = facade.registerPatient(customId, name, address, phone);
+                }
+
                 if (patientId != -1) {
-                    int dentistId = Integer.parseInt(dentistIdStr);
+                    int dentistId = Integer.parseInt(request.getParameter("dentistId"));
+                    String date = request.getParameter("date");
+                    String treatment = request.getParameter("treatment");
+
                     facade.scheduleAppointment(patientId, dentistId, date, treatment);
-                    response.sendRedirect("dashboard.jsp?success=booked");
+                    response.sendRedirect("appointments.jsp?success=true&pid=" + patientId);
                 } else {
                     response.sendRedirect("appointments.jsp?error=reg_failed");
                 }

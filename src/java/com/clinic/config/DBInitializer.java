@@ -54,10 +54,10 @@ public class DBInitializer implements ServletContextListener {
                     "FOREIGN KEY (patient_id) REFERENCES patients(id), " +
                     "FOREIGN KEY (dentist_id) REFERENCES users(id))");
 
-            // Create Services Table
-            stmt.execute("CREATE TABLE IF NOT EXISTS services (" +
+            // Create Treatment Details Table
+            stmt.execute("CREATE TABLE IF NOT EXISTS treatmentdetails (" +
                     "id INT PRIMARY KEY AUTO_INCREMENT, " +
-                    "service_name VARCHAR(100), " +
+                    "treatment_name VARCHAR(100), " +
                     "price DECIMAL(10,2))");
 
             // Create Bills Table
@@ -68,6 +68,21 @@ public class DBInitializer implements ServletContextListener {
                     "bill_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                     "qr_code VARCHAR(255), " +
                     "FOREIGN KEY (appointment_id) REFERENCES appointments(id))");
+
+            // Create System Logs Table
+            stmt.execute("CREATE TABLE IF NOT EXISTS system_logs (" +
+                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                    "user_id INT, " +
+                    "action VARCHAR(255), " +
+                    "log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
+
+            // Create Password Recovery Requests Table
+            stmt.execute("CREATE TABLE IF NOT EXISTS password_requests (" +
+                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                    "username VARCHAR(50), " +
+                    "reason TEXT, " +
+                    "request_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+                    "status VARCHAR(20) DEFAULT 'PENDING')");
 
             // Seed Default Users if none exist
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM users");

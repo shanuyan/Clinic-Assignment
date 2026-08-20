@@ -8,22 +8,18 @@ import java.util.List;
 
 public class PatientDAO {
     
-    public int addPatient(Patient patient) throws SQLException {
-        String query = "INSERT INTO patients (name, address, phone) VALUES (?, ?, ?)";
+    public int addPatient(int customId, String name, String address, String phone) throws SQLException {
+        String query = "INSERT INTO patients (id, name, address, phone) VALUES (?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement ps = conn.prepareStatement(query)) {
             
-            ps.setString(1, patient.getName());
-            ps.setString(2, patient.getAddress());
-            ps.setString(3, patient.getContact());
+            ps.setInt(1, customId);
+            ps.setString(2, name);
+            ps.setString(3, address);
+            ps.setString(4, phone);
             ps.executeUpdate();
-            
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
+            return customId;
         }
-        return -1;
     }
 
     public Patient getPatient(int id) throws SQLException {

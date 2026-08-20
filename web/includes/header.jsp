@@ -3,7 +3,7 @@
     String role = (String) session.getAttribute("role");
     String user = (String) session.getAttribute("user");
     if (user == null) {
-        response.sendRedirect("index.html");
+        response.sendRedirect("index.jsp");
         return;
     }
 %>
@@ -11,8 +11,12 @@
 <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="dashboard.jsp">
-            <div class="bg-primary rounded-3 p-2 me-2 d-flex align-items-center justify-content-center" style="width:35px; height:35px;">
-                <span class="text-white fw-bold">S</span>
+            <div class="bg-primary rounded-3 p-1 me-2 d-flex align-items-center justify-content-center" style="width:35px; height:35px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4.5 10.1c.2 1.8 1.4 3.1 3.1 3.4 1.1.2 2.3-.2 3-1.1L12 11l1.4 1.4c.7.9 1.9 1.3 3 1.1 1.7-.3 2.9-1.6 3.1-3.4.2-2.1-.5-4.2-1.9-5.7C16.2 3 14.1 2.3 12 2.3s-4.2.7-5.6 2.1c-1.4 1.5-2.1 3.6-1.9 5.7z"/>
+                    <path d="M12 21.7c-2.1 0-4.2-.7-5.6-2.1-1.4-1.5-2.1-3.6-1.9-5.7.1-.9.3-1.8.7-2.6"/>
+                    <path d="M18.8 11.3c.4.8.6 1.7.7 2.6.2 2.1-.5 4.2-1.9 5.7-1.4 1.4-3.5 2.1-5.6 2.1"/>
+                </svg>
             </div>
             <span class="fw-bold text-dark fs-5">Sunrise Dental</span>
         </a>
@@ -21,7 +25,7 @@
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item"><a class="nav-link" href="dashboard.jsp">Overview</a></li>
                 <li class="nav-item"><a class="nav-link" href="appointments.jsp">Clinical</a></li>
-                <li class="nav-item"><a class="nav-link" href="search.jsp">Database</a></li>
+                <li class="nav-item"><a class="nav-link" href="search.jsp">Patient Records</a></li>
                 <li class="nav-item"><a class="nav-link" href="bill.jsp?treatment=Consultation&patient=Guest">Finance</a></li>
                 <% if ("ADMIN".equals(role)) { %>
                     <li class="nav-item"><a class="nav-link text-primary" href="admin_dashboard.jsp">System Admin</a></li>
@@ -34,8 +38,7 @@
                     <div class="text-muted" style="font-size: 10px;"><%= role %></div>
                 </div>
                 <div class="vr mx-2 h-25"></div>
-                <button class="btn btn-link p-0 text-muted" onclick="toggleTheme()">🌓</button>
-                <a href="auth?action=logout" class="btn btn-outline-danger btn-sm px-3">Exit</a>
+                <a href="auth?action=logout" class="btn btn-outline-danger btn-sm px-3">Logout</a>
             </div>
         </div>
     </div>

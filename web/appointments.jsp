@@ -1,72 +1,176 @@
+<%@ page import="com.clinic.model.User" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Clinical Intake | Sunrise Dental</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .type-selector {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 5px;
+            display: inline-flex;
+            margin-bottom: 2rem;
+        }
+        .type-btn {
+            padding: 10px 25px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .type-btn.active { background: white; color: var(--primary); shadow: var(--shadow); }
+        .type-btn:not(.active) { color: var(--text-muted); background: transparent; }
+    </style>
 </head>
-<body data-theme="light">
+<body>
     <%@ include file="includes/header.jsp" %>
+
+    <%
+        com.clinic.service.ClinicFacade facade = new com.clinic.service.ClinicFacade();
+        List<User> dentists = null;
+        try { dentists = facade.getDentists(); } catch(Exception e) {}
+    %>
 
     <div class="page-header">
         <div>
-            <h2 class="fw-bold mb-0 text-dark">Patient Intake Form</h2>
-            <p class="text-muted small">Register a new patient and schedule treatment.</p>
+            <h1 class="fw-bold mb-0 text-dark">Patient Intake</h1>
+            <p class="text-muted small">Process new or existing clinical patient sessions.</p>
         </div>
         <a href="dashboard.jsp" class="btn-secondary-soft">← Back to Overview</a>
     </div>
 
-    <div class="card form-card shadow-sm border-0">
+    <% if(request.getParameter("success") != null) { %>
+        <div class="max-width-850 mx-auto mb-4">
+            <div class="alert alert-success border-0 rounded-4 p-4 shadow-sm d-flex align-items-center" style="background-color: #f0fdf4; color: #15803d;">
+                <div class="me-3 fs-3">✅</div>
+                <div>
+                    <strong class="d-block">Success!</strong>
+                    The session for Patient <strong>#<%= request.getParameter("pid") %></strong> is confirmed.
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <div class="max-width-850 mx-auto text-center">
+        <div class="type-selector">
+            <button type="button" class="type-btn active" id="newBtn" onclick="setMode('NEW')">New Patient</button>
+            <button type="button" class="type-btn" id="existBtn" onclick="setMode('EXISTING')">Existing Patient</button>
+        </div>
+    </div>
+
+    <div class="card form-card border-0 mb-5">
         <form action="appointments" method="POST">
             <input type="hidden" name="action" value="register">
+            <input type="hidden" name="intake_mode" id="intakeMode" value="NEW">
 
-            <h5 class="fw-bold mb-4 text-primary">Patient Demographics</h5>
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="form-label text-muted small fw-bold text-uppercase">Full Name</label>
-                    <input type="text" name="name" class="form-control form-control-lg" required placeholder="Enter full name">
+            <div class="row mb-5">
+                <div class="col-lg-4">
+                    <h5 class="fw-bold text-dark">Identity Details</h5>
+                    <p class="text-muted small">Verify patient history or create a new profile.</p>
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label text-muted small fw-bold text-uppercase">Contact Number</label>
-                    <input type="text" name="phone" class="form-control form-control-lg" required placeholder="+94 ...">
-                </div>
-                <div class="col-12">
-                    <label class="form-label text-muted small fw-bold text-uppercase">Residential Address</label>
-                    <textarea name="address" class="form-control" rows="2" placeholder="Street, City, Postal Code"></textarea>
+                <div class="col-lg-8">
+                    <!-- Existing Patient Search -->
+                    <div id="existingFields" style="display:none;">
+                        <label class="form-label">Search Unique Patient ID</label>
+                        <input type="number" name="existing_patient_id" class="form-control form-control-lg mb-2" placeholder="e.g. 101">
+                        <small class="text-muted">Enter the ID generated during the first visit.</small>
+                    </div>
+
+                    <!-- New Patient Fields -->
+                    <div id="newFields">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Assign Unique ID</label>
+                                <input type="number" name="new_patient_id" class="form-control" placeholder="e.g. 501" required>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label">Legal Full Name</label>
+                                <input type="text" name="name" class="form-control" placeholder="Alex Pandian">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Contact Number</label>
+                                <input type="text" name="phone" class="form-control" placeholder="+94 ...">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Residential Address</label>
+                                <input type="text" name="address" class="form-control" placeholder="City, Street">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <hr class="my-5 opacity-25">
 
-            <h5 class="fw-bold mb-4 text-primary">Clinical Details</h5>
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label text-muted small fw-bold text-uppercase">Assigned Dentist</label>
-                    <select name="dentistId" class="form-select form-control-lg">
-                        <option value="2">Dr. Arul</option>
-                    </select>
+            <div class="row mb-4">
+                <div class="col-lg-4">
+                    <h5 class="fw-bold text-dark">Clinical Session</h5>
+                    <p class="text-muted small">Assign a specialist and treatment goal.</p>
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label text-muted small fw-bold text-uppercase">Schedule Date</label>
-                    <input type="datetime-local" name="date" class="form-control form-control-lg" required>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label text-muted small fw-bold text-uppercase">Treatment Goal</label>
-                    <select name="treatment" class="form-select form-control-lg">
-                        <option value="Consultation">Consultation</option>
-                        <option value="Cleaning">Prophylaxis (Cleaning)</option>
-                        <option value="Root Canal">Endodontics (Root Canal)</option>
-                        <option value="Extraction">Exodontia (Extraction)</option>
-                    </select>
+                <div class="col-lg-8">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Assigned Specialist</label>
+                            <select name="dentistId" class="form-select" required>
+                                <option value="">Select a Dentist...</option>
+                                <% if (dentists != null) { for(User d : dentists) { %>
+                                    <option value="<%= d.getId() %>"><%= d.getFullName() %></option>
+                                <% } } %>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Session Date & Time</label>
+                            <input type="datetime-local" name="date" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Treatment Pathway</label>
+                            <select name="treatment" class="form-select" required>
+                                <option value="Consultation">General Consultation</option>
+                                <option value="Cleaning">Dental Prophylaxis</option>
+                                <option value="Root Canal">Endodontic Therapy</option>
+                                <option value="Extraction">Surgical Extraction</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="mt-5 d-flex gap-3">
-                <button type="submit" class="btn btn-primary px-5 py-2 fw-bold">Confirm Registration</button>
-                <a href="dashboard.jsp" class="btn-secondary-soft px-4 py-2">Cancel Intake</a>
+            <div class="mt-5 pt-4 border-top d-flex justify-content-end gap-3">
+                <a href="dashboard.jsp" class="btn-secondary-soft">Cancel & Discard</a>
+                <button type="submit" class="btn btn-primary px-5 py-2 fw-bold rounded-3 shadow">Confirm Appointment</button>
             </div>
         </form>
     </div>
 
+    <script>
+        function setMode(mode) {
+            document.getElementById('intakeMode').value = mode;
+            const newFields = document.getElementById('newFields');
+            const existFields = document.getElementById('existingFields');
+            const newBtn = document.getElementById('newBtn');
+            const existBtn = document.getElementById('existBtn');
+
+            if (mode === 'NEW') {
+                newFields.style.display = 'block';
+                existFields.style.display = 'none';
+                newBtn.classList.add('active');
+                existBtn.classList.remove('active');
+            } else {
+                newFields.style.display = 'none';
+                existFields.style.display = 'block';
+                newBtn.classList.remove('active');
+                existBtn.classList.add('active');
+            }
+        }
+    </script>
     <%@ include file="includes/footer.jsp" %>
+</body>
+</html>

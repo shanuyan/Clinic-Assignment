@@ -18,7 +18,7 @@ public class AuthServlet extends HttpServlet {
         String action = request.getParameter("action");
         if ("logout".equals(action)) {
             request.getSession().invalidate();
-            response.sendRedirect("index.html");
+            response.sendRedirect("index.jsp");
         }
     }
 
@@ -48,14 +48,14 @@ public class AuthServlet extends HttpServlet {
                         response.sendRedirect("staff_dashboard.jsp");
                         break;
                     default:
-                        response.sendRedirect("index.html?error=unauthorized");
+                        response.sendRedirect("index.jsp?error=unauthorized");
                 }
             } else {
-                response.sendRedirect("index.html?error=invalid");
+                response.sendRedirect("index.jsp?error=invalid");
             }
         } else if ("logout".equals(action)) {
             request.getSession().invalidate();
-            response.sendRedirect("index.html");
+            response.sendRedirect("index.jsp");
         }
     }
 }

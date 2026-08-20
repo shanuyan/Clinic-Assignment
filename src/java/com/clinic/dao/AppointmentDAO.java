@@ -94,6 +94,42 @@ public class AppointmentDAO {
         return list;
     }
 
+    public boolean updateStatus(int appointmentId, String status) throws SQLException {
+        String query = "UPDATE appointments SET status = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, status);
+            ps.setInt(2, appointmentId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public List<Appointment> getAppointmentsByStatus(String status) throws SQLException {
+        List<Appointment> list = new ArrayList<>();
+        String query = "SELECT a.*, p.name as patient_name, u.full_name as dentist_name " +
+                       "FROM appointments a " +
+                       "JOIN patients p ON a.patient_id = p.id " +
+                       "JOIN users u ON a.dentist_id = u.id " +
+                       "WHERE a.status = ? ORDER BY a.id DESC";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, status);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Appointment appt = new Appointment();
+                appt.setId(rs.getInt("id"));
+                appt.setPatientId(rs.getInt("patient_id"));
+                appt.setTreatmentType(rs.getString("treatment_type"));
+                appt.setAppointmentDate(rs.getString("appointment_date"));
+                appt.setStatus(rs.getString("status"));
+                appt.setPatientName(rs.getString("patient_name"));
+                appt.setDentistName(rs.getString("dentist_name"));
+                list.add(appt);
+            }
+        }
+        return list;
+    }
+
     public List<Appointment> getAppointmentsByDentist(int dentistId) throws SQLException {
         List<Appointment> list = new ArrayList<>();
         String query = "SELECT a.*, p.name as patient_name FROM appointments a JOIN patients p ON a.patient_id = p.id WHERE a.dentist_id = ?";
