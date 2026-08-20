@@ -3,6 +3,8 @@ package com.clinic.service;
 import com.clinic.dao.UserDAO;
 import com.clinic.dao.PatientDAO;
 import com.clinic.dao.AppointmentDAO;
+import com.clinic.dao.ServiceDAO;
+import com.clinic.dao.BillDAO;
 import com.clinic.model.User;
 import com.clinic.model.Patient;
 import com.clinic.model.Appointment;
@@ -15,11 +17,18 @@ public class ClinicFacade {
     private UserDAO userDAO;
     private PatientDAO patientDAO;
     private AppointmentDAO appointmentDAO;
+    private ServiceDAO serviceDAO;
+    private BillDAO billDAO;
 
     public ClinicFacade() {
         this.userDAO = new UserDAO();
         this.patientDAO = new PatientDAO();
         this.appointmentDAO = new AppointmentDAO();
+        this.serviceDAO = new ServiceDAO();
+        this.billDAO = new BillDAO();
+        try {
+            this.serviceDAO.seedServices();
+        } catch (Exception e) {}
     }
 
     public boolean login(String username, String password) {
@@ -43,5 +52,10 @@ public class ClinicFacade {
         appt.setTreatmentType(treatment);
         appt.setStatus("SCHEDULED");
         return appointmentDAO.addAppointment(appt);
+    }
+
+    public double getTreatmentCost(String treatment) throws Exception {
+        java.util.Map<String, Double> prices = serviceDAO.getServicePrices();
+        return prices.getOrDefault(treatment, 0.0) + prices.getOrDefault("Consultation", 1000.0);
     }
 }
