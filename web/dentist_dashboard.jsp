@@ -66,11 +66,11 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-muted text-uppercase">Diagnosis & Clinical Findings</label>
-                        <textarea class="form-control" rows="3" placeholder="Enter clinical observations..."></textarea>
+                        <textarea name="notes" class="form-control" rows="3" placeholder="Enter clinical observations..."></textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-muted text-uppercase">Digital Prescription</label>
-                        <textarea class="form-control" rows="2" placeholder="List medications and dosage..."></textarea>
+                        <textarea name="medicines" class="form-control" rows="2" placeholder="List medications and dosage..."></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary px-4 py-2 fw-bold">Complete & Send to Billing</button>
                 </form>

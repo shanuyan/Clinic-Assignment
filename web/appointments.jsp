@@ -137,10 +137,10 @@
                         <div class="col-md-6">
                             <label class="form-label">Treatment Pathway</label>
                             <select name="treatment" class="form-select" required>
-                                <option value="Consultation">General Consultation</option>
-                                <option value="Cleaning">Dental Prophylaxis</option>
-                                <option value="Root Canal">Endodontic Therapy</option>
-                                <option value="Extraction">Surgical Extraction</option>
+                                <option value="">Select Procedure...</option>
+                                <% if (treatmentRates != null) { for(String tName : treatmentRates.keySet()) { %>
+                                    <option value="<%= tName %>"><%= tName %></option>
+                                <% } } %>
                             </select>
                         </div>
                     </div>

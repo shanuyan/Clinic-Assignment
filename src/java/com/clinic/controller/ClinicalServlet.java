@@ -19,13 +19,21 @@ public class ClinicalServlet extends HttpServlet {
         
         try {
             if ("finalize".equals(action)) {
-                int apptId = Integer.parseInt(request.getParameter("apptId"));
-                facade.finalizeClinicalSession(apptId);
-                response.sendRedirect("dentist_dashboard.jsp?status=session_saved");
+                String apptIdStr = request.getParameter("apptId");
+                String notes = request.getParameter("notes");
+                String medicines = request.getParameter("medicines");
+                
+                if (apptIdStr != null && !apptIdStr.isEmpty()) {
+                    int apptId = Integer.parseInt(apptIdStr);
+                    facade.finalizeClinicalSession(apptId, notes, medicines);
+                    response.sendRedirect("dentist_dashboard.jsp?status=session_saved");
+                }
+                
             } else if ("process_bill".equals(action)) {
                 int apptId = Integer.parseInt(request.getParameter("apptId"));
                 facade.markAsBilled(apptId);
                 response.sendRedirect("bill.jsp?status=billed_success");
+                
             } else if ("report_unavailability".equals(action)) {
                 String user = (String) request.getSession().getAttribute("user");
                 String date = request.getParameter("unavailable_date");
@@ -35,7 +43,7 @@ public class ClinicalServlet extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("dentist_dashboard.jsp?error=save_failed");
+            response.sendRedirect("dentist_dashboard.jsp?error=action_failed");
         }
     }
 }

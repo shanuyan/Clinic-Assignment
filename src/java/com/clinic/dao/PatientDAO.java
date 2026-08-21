@@ -36,4 +36,13 @@ public class PatientDAO {
         }
         return null;
     }
+
+    public boolean deletePatient(int id) throws SQLException {
+        String query = "DELETE FROM patients WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        }
+    }
 }

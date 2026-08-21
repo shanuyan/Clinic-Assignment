@@ -9,6 +9,8 @@ public class Appointment {
     private String treatmentType;
     private String patientName;
     private String dentistName;
+    private String clinicalNotes;
+    private String prescribedMedicines;
 
     public Appointment() {}
 
@@ -29,4 +31,8 @@ public class Appointment {
     public void setPatientName(String patientName) { this.patientName = patientName; }
     public String getDentistName() { return dentistName; }
     public void setDentistName(String dentistName) { this.dentistName = dentistName; }
+    public String getClinicalNotes() { return clinicalNotes; }
+    public void setClinicalNotes(String clinicalNotes) { this.clinicalNotes = clinicalNotes; }
+    public String getPrescribedMedicines() { return prescribedMedicines; }
+    public void setPrescribedMedicines(String prescribedMedicines) { this.prescribedMedicines = prescribedMedicines; }
 }

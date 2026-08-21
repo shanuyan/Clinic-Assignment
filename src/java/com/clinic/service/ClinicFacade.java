@@ -100,8 +100,8 @@ public class ClinicFacade {
         return appointmentDAO.getAppointmentsByStatus("COMPLETED");
     }
 
-    public boolean finalizeClinicalSession(int appointmentId) throws Exception {
-        return appointmentDAO.updateStatus(appointmentId, "COMPLETED");
+    public boolean finalizeClinicalSession(int appointmentId, String notes, String medicines) throws Exception {
+        return appointmentDAO.finalizeSession(appointmentId, notes, medicines);
     }
 
     public boolean markAsBilled(int appointmentId) throws Exception {

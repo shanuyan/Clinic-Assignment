@@ -23,10 +23,14 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
-                <li class="nav-item"><a class="nav-link" href="dashboard.jsp">Overview</a></li>
-                <li class="nav-item"><a class="nav-link" href="appointments.jsp">Clinical</a></li>
-                <li class="nav-item"><a class="nav-link" href="search.jsp">Patient Records</a></li>
-                <li class="nav-item"><a class="nav-link" href="bill.jsp?treatment=Consultation&patient=Guest">Finance</a></li>
+                <% if (!"DENTIST".equals(role)) { %>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.jsp">Overview</a></li>
+                    <li class="nav-item"><a class="nav-link" href="appointments.jsp">Clinical</a></li>
+                    <li class="nav-item"><a class="nav-link" href="search.jsp">Patient Records</a></li>
+                    <li class="nav-item"><a class="nav-link" href="bill.jsp?treatment=Consultation&patient=Guest">Finance</a></li>
+                <% } else { %>
+                    <li class="nav-item"><a class="nav-link active" href="dentist_dashboard.jsp">Clinical Dashboard</a></li>
+                <% } %>
                 <% if ("ADMIN".equals(role)) { %>
                     <li class="nav-item"><a class="nav-link text-primary" href="admin_dashboard.jsp">System Admin</a></li>
                 <% } %>
