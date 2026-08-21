@@ -84,6 +84,14 @@ public class DBInitializer implements ServletContextListener {
                     "request_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                     "status VARCHAR(20) DEFAULT 'PENDING')");
 
+            // Create Dentist Unavailability Table
+            stmt.execute("CREATE TABLE IF NOT EXISTS dentist_unavailability (" +
+                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                    "dentist_id INT, " +
+                    "unavailable_date DATE, " +
+                    "reason VARCHAR(255), " +
+                    "FOREIGN KEY (dentist_id) REFERENCES users(id) ON DELETE CASCADE)");
+
             // Seed Default Users if none exist
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM users");
             if (rs.next() && rs.getInt(1) == 0) {

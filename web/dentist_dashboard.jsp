@@ -35,6 +35,12 @@
         </div>
     <% } %>
 
+    <% if("unavailability_reported".equals(request.getParameter("status"))) { %>
+        <div class="alert alert-info border-0 rounded-4 p-3 mb-4 shadow-sm">
+            <strong>Notified!</strong> Your unavailability has been reported to the System Administrator.
+        </div>
+    <% } %>
+
     <div class="row g-4">
         <div class="col-md-8">
             <div class="card p-4 shadow-sm border-0 mb-4">
@@ -74,7 +80,7 @@
         <div class="col-md-4">
             <div class="card p-4 shadow-sm border-0 h-100">
                 <h5 class="fw-bold mb-4 text-primary">Live Patient Queue</h5>
-                <div class="list-group list-group-flush">
+                <div class="list-group list-group-flush mb-4">
                     <% if (myAppts != null && !myAppts.isEmpty()) {
                         for (Appointment a : myAppts) {
                             if(!"BILLED".equals(a.getStatus())) { %>
@@ -93,6 +99,22 @@
                     <p class="text-center text-muted py-5">Queue is empty.</p>
                     <% } %>
                 </div>
+
+                <hr class="my-4 opacity-25">
+
+                <h5 class="fw-bold mb-3 text-danger small text-uppercase">Report Unavailability</h5>
+                <form action="clinical_actions" method="POST">
+                    <input type="hidden" name="action" value="report_unavailability">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Select Date</label>
+                        <input type="date" name="unavailable_date" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Reason (Optional)</label>
+                        <input type="text" name="reason" class="form-control form-control-sm" placeholder="e.g. Conference">
+                    </div>
+                    <button type="submit" class="btn btn-outline-danger btn-sm w-100 fw-bold">Notify Administrator</button>
+                </form>
             </div>
         </div>
     </div>

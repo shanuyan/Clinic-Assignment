@@ -26,6 +26,12 @@ public class ClinicalServlet extends HttpServlet {
                 int apptId = Integer.parseInt(request.getParameter("apptId"));
                 facade.markAsBilled(apptId);
                 response.sendRedirect("bill.jsp?status=billed_success");
+            } else if ("report_unavailability".equals(action)) {
+                String user = (String) request.getSession().getAttribute("user");
+                String date = request.getParameter("unavailable_date");
+                String reason = request.getParameter("reason");
+                facade.reportUnavailability(user, date, reason);
+                response.sendRedirect("dentist_dashboard.jsp?status=unavailability_reported");
             }
         } catch (Exception e) {
             e.printStackTrace();

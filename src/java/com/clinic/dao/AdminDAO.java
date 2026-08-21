@@ -132,4 +132,29 @@ public class AdminDAO {
             ps.executeUpdate();
         }
     }
+
+    public void addUnavailability(int dentistId, String date, String reason) throws SQLException {
+        String query = "INSERT INTO dentist_unavailability (dentist_id, unavailable_date, reason) VALUES (?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, dentistId);
+            ps.setString(2, date);
+            ps.setString(3, reason);
+            ps.executeUpdate();
+        }
+    }
+
+    public List<String> getAllUnavailability() throws SQLException {
+        List<String> list = new ArrayList<>();
+        String query = "SELECT u.full_name, un.unavailable_date, un.reason FROM dentist_unavailability un " +
+                       "JOIN users u ON un.dentist_id = u.id ORDER BY un.unavailable_date DESC";
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                list.add(rs.getString("full_name") + " unavailable on " + rs.getDate("unavailable_date") + " (" + rs.getString("reason") + ")");
+            }
+        }
+        return list;
+    }
 }

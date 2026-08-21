@@ -39,6 +39,7 @@
         List<Appointment> recentAppts = null;
         List<String> auditLogs = null;
         List<PasswordRequest> passRequests = null;
+        List<String> doctorAlerts = null;
         java.util.Map<String, Double> rates = null;
         try {
             userList = facade.getSystemUsers();
@@ -46,6 +47,7 @@
             auditLogs = facade.getAuditLogs();
             rates = facade.getAllServiceRates();
             passRequests = facade.getPendingPassRequests();
+            doctorAlerts = facade.getClinicalUnavailability();
         } catch(Exception e) {}
     %>
 
@@ -189,6 +191,20 @@
                         </div>
                     <% } } else { %>
                         <p class="text-muted small">No pending security requests.</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div class="card p-4 border-0 shadow-sm h-auto mb-4 bg-light">
+                <h5 class="fw-bold mb-4 text-dark">Specialist Leave Reports</h5>
+                <div class="list-group list-group-flush">
+                    <% if (doctorAlerts != null && !doctorAlerts.isEmpty()) {
+                        for(String alert : doctorAlerts) { %>
+                        <div class="list-group-item px-0 border-0 py-2 small">
+                            <i class="text-danger me-2">📅</i> <%= alert %>
+                        </div>
+                    <% } } else { %>
+                        <p class="text-muted small">No leave reports from doctors.</p>
                     <% } %>
                 </div>
             </div>

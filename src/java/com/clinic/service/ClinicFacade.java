@@ -155,4 +155,13 @@ public class ClinicFacade {
     public void solvePassRequest(int id) throws Exception {
         adminDAO.resolvePasswordRequest(id);
     }
+
+    public void reportUnavailability(String username, String date, String reason) throws Exception {
+        int id = userDAO.getUserIdByUsername(username);
+        adminDAO.addUnavailability(id, date, reason);
+    }
+
+    public List<String> getClinicalUnavailability() throws Exception {
+        return adminDAO.getAllUnavailability();
+    }
 }

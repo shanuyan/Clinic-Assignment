@@ -36,7 +36,11 @@
     <%
         com.clinic.service.ClinicFacade facade = new com.clinic.service.ClinicFacade();
         List<User> dentists = null;
-        try { dentists = facade.getDentists(); } catch(Exception e) {}
+        java.util.Map<String, Double> treatmentRates = null;
+        try {
+            dentists = facade.getDentists();
+            treatmentRates = facade.getAllServiceRates();
+        } catch(Exception e) {}
     %>
 
     <div class="page-header">
