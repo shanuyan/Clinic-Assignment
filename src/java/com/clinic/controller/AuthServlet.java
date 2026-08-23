@@ -33,9 +33,11 @@ public class AuthServlet extends HttpServlet {
             
             if (facade.login(user, pass)) {
                 String role = facade.getUserRole(user);
+                String profileImage = facade.getProfileImage(user);
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
                 session.setAttribute("role", role);
+                session.setAttribute("profileImage", profileImage);
                 
                 switch (role) {
                     case "ADMIN":

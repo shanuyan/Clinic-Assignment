@@ -113,7 +113,18 @@
                         <tbody>
                             <% if (userList != null) { for(User u : userList) { %>
                             <tr>
-                                <td class="ps-4 fw-bold"><%= u.getFullName() %><br><small class="text-muted fw-normal">System ID: <%= u.getUsername() %></small></td>
+                                <td class="ps-4 fw-bold">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <img src="<%= (u.getProfileImage() != null && !u.getProfileImage().isEmpty() && !u.getProfileImage().equals("default_avatar.png")) ? u.getProfileImage() : "https://api.dicebear.com/7.x/adventurer/svg?seed=" + u.getUsername() %>" 
+                                             class="rounded-circle border border-2 border-primary-subtle shadow-sm" 
+                                             style="width: 45px; height: 45px; object-fit: cover;" 
+                                             onerror="this.src='https://api.dicebear.com/7.x/adventurer/svg?seed=<%= u.getUsername() %>'">
+                                        <div>
+                                            <%= u.getFullName() %>
+                                            <br><small class="text-muted fw-normal">System ID: <%= u.getUsername() %></small>
+                                        </div>
+                                    </div>
+                                </td>
                                 <td><span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2"><%= u.getRole() %></span></td>
                                 <td>
                                     <button class="btn btn-sm btn-dark fw-bold rounded-pill px-4" onclick="openResetModal('<%= u.getId() %>')">Reset PassKey</button>
@@ -234,7 +245,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <form action="admin_actions" method="POST">
+                    <form action="admin_actions" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="action" value="register">
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
@@ -257,6 +268,67 @@
                                     <option value="DENTIST">DENTIST (Medical)</option>
                                     <option value="STAFF">STAFF (Operations)</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-12">
+                                <label class="form-label small fw-bold text-muted text-uppercase mb-2">Profile Image Setup</label>
+                                
+                                <ul class="nav nav-pills mb-3 gap-2" id="imageSourceTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active small py-1.5 px-3 fw-bold rounded-pill" id="upload-tab" data-bs-toggle="pill" data-bs-target="#upload-pane" type="button" role="tab" aria-controls="upload-pane" aria-selected="true">📤 Upload Image</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link small py-1.5 px-3 fw-bold rounded-pill" id="preset-tab" data-bs-toggle="pill" data-bs-target="#preset-pane" type="button" role="tab" aria-controls="preset-pane" aria-selected="false">✨ Choose Preset / URL</button>
+                                    </li>
+                                </ul>
+                                
+                                <div class="tab-content" id="imageSourceTabContent">
+                                    <!-- Upload Pane -->
+                                    <div class="tab-pane fade show active" id="upload-pane" role="tabpanel" aria-labelledby="upload-tab">
+                                        <div class="d-flex align-items-center gap-4 p-3 bg-light rounded-4 border border-light-subtle">
+                                            <div class="position-relative">
+                                                <img id="imagePreview" src="https://api.dicebear.com/7.x/adventurer/svg?seed=placeholder" 
+                                                     class="rounded-circle border border-3 border-primary-subtle shadow-sm" 
+                                                     style="width: 85px; height: 85px; object-fit: cover;"
+                                                     onerror="this.src='https://api.dicebear.com/7.x/adventurer/svg?seed=placeholder'">
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <input type="file" name="profile_image_file" id="profileImageFile" accept="image/*" class="form-control form-control-sm mb-2" onchange="previewUploadFile(this)">
+                                                <small class="text-muted d-block" style="font-size: 11px;">Recommended: Square ratio, max 2MB (JPEG, PNG, WEBP)</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Preset Pane -->
+                                    <div class="tab-pane fade" id="preset-pane" role="tabpanel" aria-labelledby="preset-tab">
+                                        <div class="p-3 bg-light rounded-4 border border-light-subtle mb-3">
+                                            <input type="text" name="profile_image" id="profileImageInput" class="form-control" placeholder="https://example.com/image.jpg or select a preset below..." oninput="previewUrlChange(this.value)">
+                                        </div>
+                                        
+                                        <label class="form-label small fw-bold text-muted text-uppercase d-block mb-2">Quick Avatar Presets</label>
+                                        <div class="d-flex gap-3 flex-wrap align-items-center">
+                                            <div class="preset-avatar-wrapper" style="cursor: pointer;" onclick="selectPreset('https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=150&auto=format&fit=crop')">
+                                                <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=150&auto=format&fit=crop" class="rounded-circle border border-2 preset-avatar" style="width:45px; height:45px; object-fit:cover; transition: all 0.2s;">
+                                            </div>
+                                            <div class="preset-avatar-wrapper" style="cursor: pointer;" onclick="selectPreset('https://images.unsplash.com/photo-1594824813573-246434de83fb?q=80&w=150&auto=format&fit=crop')">
+                                                <img src="https://images.unsplash.com/photo-1594824813573-246434de83fb?q=80&w=150&auto=format&fit=crop" class="rounded-circle border border-2 preset-avatar" style="width:45px; height:45px; object-fit:cover; transition: all 0.2s;">
+                                            </div>
+                                            <div class="preset-avatar-wrapper" style="cursor: pointer;" onclick="selectPreset('https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=150&auto=format&fit=crop')">
+                                                <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=150&auto=format&fit=crop" class="rounded-circle border border-2 preset-avatar" style="width:45px; height:45px; object-fit:cover; transition: all 0.2s;">
+                                            </div>
+                                            <div class="preset-avatar-wrapper" style="cursor: pointer;" onclick="selectPreset('https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=150&auto=format&fit=crop')">
+                                                <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=150&auto=format&fit=crop" class="rounded-circle border border-2 preset-avatar" style="width:45px; height:45px; object-fit:cover; transition: all 0.2s;">
+                                            </div>
+                                            <div class="preset-avatar-wrapper" style="cursor: pointer;" onclick="selectPreset('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=150&auto=format&fit=crop')">
+                                                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=150&auto=format&fit=crop" class="rounded-circle border border-2 preset-avatar" style="width:45px; height:45px; object-fit:cover; transition: all 0.2s;">
+                                            </div>
+                                            <div class="preset-avatar-wrapper" style="cursor: pointer;" onclick="selectPreset('https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=150&auto=format&fit=crop')">
+                                                <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=150&auto=format&fit=crop" class="rounded-circle border border-2 preset-avatar" style="width:45px; height:45px; object-fit:cover; transition: all 0.2s;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div id="doctorFields" class="p-4 bg-light rounded-4 mb-4 border border-light-subtle">
@@ -355,6 +427,55 @@
         }
         function openResetModalByUsername(user) {
             alert("Please find user @" + user + " in the Registry table above to reset their key.");
+        }
+        function previewUploadFile(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+                
+                // Clear preset URL input and selections
+                document.getElementById('profileImageInput').value = '';
+                const presets = document.querySelectorAll('.preset-avatar');
+                presets.forEach(p => {
+                    p.classList.remove('border-primary');
+                    p.style.transform = 'scale(1)';
+                });
+            }
+        }
+
+        function previewUrlChange(url) {
+            if (url) {
+                document.getElementById('imagePreview').src = url;
+                // Clear file input
+                document.getElementById('profileImageFile').value = '';
+            } else {
+                document.getElementById('imagePreview').src = 'https://api.dicebear.com/7.x/adventurer/svg?seed=placeholder';
+            }
+        }
+
+        function selectPreset(url) {
+            document.getElementById('profileImageInput').value = url;
+            document.getElementById('imagePreview').src = url;
+            
+            // Clear file input
+            document.getElementById('profileImageFile').value = '';
+            
+            const presets = document.querySelectorAll('.preset-avatar');
+            presets.forEach(p => {
+                p.classList.remove('border-primary');
+                p.style.transform = 'scale(1)';
+            });
+            
+            if (event && event.currentTarget) {
+                const targetImg = event.currentTarget.querySelector('.preset-avatar');
+                if (targetImg) {
+                    targetImg.classList.add('border-primary');
+                    targetImg.style.transform = 'scale(1.1)';
+                }
+            }
         }
     </script>
     <%@ include file="includes/footer.jsp" %>

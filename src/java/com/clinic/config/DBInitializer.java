@@ -15,7 +15,7 @@ public class DBInitializer implements ServletContextListener {
              Statement stmt = conn.createStatement()) {
             
             // Create Core Tables
-            stmt.execute("CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(50) UNIQUE, password VARCHAR(255), role VARCHAR(20), full_name VARCHAR(100))");
+            stmt.execute("CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(50) UNIQUE, password VARCHAR(255), role VARCHAR(20), full_name VARCHAR(100), profile_image VARCHAR(255) DEFAULT 'default_avatar.png')");
             stmt.execute("CREATE TABLE IF NOT EXISTS patients (id INT PRIMARY KEY, name VARCHAR(100), phone VARCHAR(20), address TEXT)");
             stmt.execute("CREATE TABLE IF NOT EXISTS treatmentdetails (id INT PRIMARY KEY AUTO_INCREMENT, treatment_name VARCHAR(100), price DECIMAL(10,2))");
             
@@ -25,17 +25,23 @@ public class DBInitializer implements ServletContextListener {
                     "appointment_date DATETIME, status VARCHAR(20) DEFAULT 'PENDING', " +
                     "treatment_type VARCHAR(100), clinical_notes TEXT, prescribed_medicines TEXT)");
 
-            // AUTO-FIX: Add missing columns if table already existed
+            stmt.execute("CREATE TABLE IF NOT EXISTS system_logs (id INT PRIMARY KEY AUTO_INCREMENT, user_id INT, action VARCHAR(255), log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
+            stmt.execute("CREATE TABLE IF NOT EXISTS password_requests (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(50), reason TEXT, status VARCHAR(20) DEFAULT 'PENDING', request_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
+            stmt.execute("CREATE TABLE IF NOT EXISTS dentist_unavailability (id INT PRIMARY KEY AUTO_INCREMENT, dentist_id INT, unavailable_date DATE, reason VARCHAR(255))");
+            stmt.execute("CREATE TABLE IF NOT EXISTS doctor_profiles (user_id INT PRIMARY KEY, license_number VARCHAR(50), specialization VARCHAR(100), experience INT)");
+            stmt.execute("CREATE TABLE IF NOT EXISTS bills (id INT PRIMARY KEY AUTO_INCREMENT, appointment_id INT, amount DECIMAL(10,2), qr_code VARCHAR(255), bill_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
+
+            // AUTO-FIX: Add missing columns if tables already existed
             DatabaseMetaData md = conn.getMetaData();
             ResultSet rs = md.getColumns(null, null, "appointments", "clinical_notes");
             if (!rs.next()) {
                 stmt.execute("ALTER TABLE appointments ADD COLUMN clinical_notes TEXT");
                 stmt.execute("ALTER TABLE appointments ADD COLUMN prescribed_medicines TEXT");
             }
-
-            stmt.execute("CREATE TABLE IF NOT EXISTS system_logs (id INT PRIMARY KEY AUTO_INCREMENT, user_id INT, action VARCHAR(255), log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
-            stmt.execute("CREATE TABLE IF NOT EXISTS password_requests (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(50), reason TEXT, status VARCHAR(20) DEFAULT 'PENDING')");
-            stmt.execute("CREATE TABLE IF NOT EXISTS dentist_unavailability (id INT PRIMARY KEY AUTO_INCREMENT, dentist_id INT, unavailable_date DATE, reason VARCHAR(255))");
+            ResultSet rsPR = md.getColumns(null, null, "password_requests", "request_time");
+            if (!rsPR.next()) {
+                stmt.execute("ALTER TABLE password_requests ADD COLUMN request_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
+            }
 
             // Seed Admin if empty
             ResultSet userCheck = stmt.executeQuery("SELECT COUNT(*) FROM users");

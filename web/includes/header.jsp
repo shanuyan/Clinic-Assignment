@@ -2,6 +2,7 @@
 <%
     String role = (String) session.getAttribute("role");
     String user = (String) session.getAttribute("user");
+    String profileImage = (String) session.getAttribute("profileImage");
     if (user == null) {
         response.sendRedirect("index.jsp");
         return;
@@ -37,12 +38,26 @@
             </ul>
 
             <div class="d-flex align-items-center gap-3">
-                <div class="text-end d-none d-lg-block">
-                    <div class="fw-bold small"><%= user %></div>
-                    <div class="text-muted" style="font-size: 10px;"><%= role %></div>
+                <div class="dropdown">
+                    <a class="d-flex align-items-center gap-3 text-decoration-none dropdown-toggle" href="#" role="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="<%= (profileImage != null && !profileImage.isEmpty() && !profileImage.equals("default_avatar.png")) ? profileImage : "https://api.dicebear.com/7.x/adventurer/svg?seed=" + user %>" 
+                             class="rounded-circle border border-2 border-primary-subtle shadow-sm animate-fade-in" 
+                             style="width: 36px; height: 36px; object-fit: cover;" 
+                             onerror="this.src='https://api.dicebear.com/7.x/adventurer/svg?seed=<%= user %>'">
+                        <div class="text-end d-none d-lg-block">
+                            <div class="fw-bold small text-dark"><%= user %></div>
+                            <div class="text-muted" style="font-size: 10px;"><%= role %></div>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg mt-2 rounded-3" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item py-2 fw-semibold small" href="profile.jsp">👤 View Profile</a></li>
+                        <% if ("ADMIN".equals(role)) { %>
+                            <li><a class="dropdown-item py-2 fw-semibold small" href="admin_dashboard.jsp">⚙️ System Admin</a></li>
+                        <% } %>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item py-2 fw-semibold text-danger small" href="auth?action=logout">🚪 Logout</a></li>
+                    </ul>
                 </div>
-                <div class="vr mx-2 h-25"></div>
-                <a href="auth?action=logout" class="btn btn-outline-danger btn-sm px-3">Logout</a>
             </div>
         </div>
     </div>

@@ -5,14 +5,16 @@ public class User {
     private String username;
     private String role;
     private String fullName;
+    private String profileImage;
 
     public User() {}
 
-    public User(int id, String username, String role, String fullName) {
+    public User(int id, String username, String role, String fullName, String profileImage) {
         this.id = id;
         this.username = username;
         this.role = role;
         this.fullName = fullName;
+        this.profileImage = profileImage;
     }
 
     // Getters and Setters
@@ -24,4 +26,6 @@ public class User {
     public void setRole(String role) { this.role = role; }
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }
+    public String getProfileImage() { return profileImage; }
+    public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
 }

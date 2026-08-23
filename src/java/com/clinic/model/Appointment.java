@@ -14,7 +14,7 @@ public class Appointment {
 
     public Appointment() {}
 
-    // Getters and Setters
+    // Basic Getters/Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public int getPatientId() { return patientId; }
@@ -27,6 +27,8 @@ public class Appointment {
     public void setStatus(String status) { this.status = status; }
     public String getTreatmentType() { return treatmentType; }
     public void setTreatmentType(String treatmentType) { this.treatmentType = treatmentType; }
+    
+    // Virtual Fields for UI
     public String getPatientName() { return patientName; }
     public void setPatientName(String patientName) { this.patientName = patientName; }
     public String getDentistName() { return dentistName; }

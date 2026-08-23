@@ -182,3 +182,11 @@ body {
     background-color: #e2e8f0;
     color: #1e293b;
 }
+
+.max-width-600 {
+    max-width: 600px;
+}
+
+.max-width-850 {
+    max-width: 850px;
+}

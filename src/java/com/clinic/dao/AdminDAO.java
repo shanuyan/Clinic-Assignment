@@ -11,13 +11,14 @@ public class AdminDAO {
     
     public List<User> getAllUsers() throws SQLException {
         List<User> users = new ArrayList<>();
-        String query = "SELECT id, username, role, full_name FROM users";
+        String query = "SELECT id, username, role, full_name, profile_image FROM users";
         try (Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
             while (rs.next()) {
                 users.add(new User(rs.getInt("id"), rs.getString("username"), 
-                                   rs.getString("role"), rs.getString("full_name")));
+                                   rs.getString("role"), rs.getString("full_name"),
+                                   rs.getString("profile_image")));
             }
         }
         return users;
@@ -25,14 +26,15 @@ public class AdminDAO {
 
     public List<User> getUsersByRole(String role) throws SQLException {
         List<User> users = new ArrayList<>();
-        String query = "SELECT id, username, role, full_name FROM users WHERE role = ?";
+        String query = "SELECT id, username, role, full_name, profile_image FROM users WHERE role = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, role);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 users.add(new User(rs.getInt("id"), rs.getString("username"), 
-                                   rs.getString("role"), rs.getString("full_name")));
+                                   rs.getString("role"), rs.getString("full_name"),
+                                   rs.getString("profile_image")));
             }
         }
         return users;
@@ -48,14 +50,15 @@ public class AdminDAO {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
-    public int createUser(String username, String password, String role, String fullName) throws SQLException {
-        String query = "INSERT INTO users (username, password, role, full_name) VALUES (?, ?, ?, ?)";
+    public int createUser(String username, String password, String role, String fullName, String imagePath) throws SQLException {
+        String query = "INSERT INTO users (username, password, role, full_name, profile_image) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, username);
             ps.setString(2, password);
             ps.setString(3, role);
             ps.setString(4, fullName);
+            ps.setString(5, (imagePath != null && !imagePath.isEmpty()) ? imagePath : "default_avatar.png");
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) return rs.getInt(1);

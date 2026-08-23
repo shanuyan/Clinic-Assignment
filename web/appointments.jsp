@@ -161,17 +161,24 @@
             const existFields = document.getElementById('existingFields');
             const newBtn = document.getElementById('newBtn');
             const existBtn = document.getElementById('existBtn');
+            
+            const newIdInput = document.querySelector('input[name="new_patient_id"]');
+            const existIdInput = document.querySelector('input[name="existing_patient_id"]');
 
             if (mode === 'NEW') {
                 newFields.style.display = 'block';
                 existFields.style.display = 'none';
                 newBtn.classList.add('active');
                 existBtn.classList.remove('active');
+                if (newIdInput) newIdInput.required = true;
+                if (existIdInput) existIdInput.required = false;
             } else {
                 newFields.style.display = 'none';
                 existFields.style.display = 'block';
                 newBtn.classList.remove('active');
                 existBtn.classList.add('active');
+                if (newIdInput) newIdInput.required = false;
+                if (existIdInput) existIdInput.required = true;
             }
         }
     </script>
