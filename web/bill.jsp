@@ -136,16 +136,36 @@
             </table>
 
             <div class="text-center mb-5 no-print">
-                <p class="text-muted small">This is a system-generated professional invoice. Scan to verify authenticity.</p>
+                <p class="text-muted small">This is a system-generated professional invoice. Scan to view clinical notes directly.</p>
                 <%
-                    String scheme = request.getScheme();
-                    String serverName = request.getServerName();
-                    int serverPort = request.getServerPort();
-                    String contextPath = request.getContextPath();
-                    String verifyUrl = scheme + "://" + serverName + ":" + serverPort + contextPath + "/verify.jsp?id=" + current.getId();
+                    StringBuilder qrText = new StringBuilder();
+                    qrText.append("--- SUNRISE DENTAL RECORD ---\n");
+                    qrText.append("Patient: ").append(current.getPatientName()).append("\n");
+                    qrText.append("Treatment: ").append(current.getTreatmentType()).append("\n");
+                    qrText.append("Doctor: Dr. ").append(current.getDentistName()).append("\n");
+                    qrText.append("Date: ").append(current.getAppointmentDate()).append("\n");
+                    qrText.append("Notes: ").append((current.getClinicalNotes() != null) ? current.getClinicalNotes() : "N/A").append("\n");
+                    qrText.append("Rx: ").append((current.getPrescribedMedicines() != null) ? current.getPrescribedMedicines() : "N/A").append("\n");
+
+                    // Add brief history (top 2 previous)
+                    try {
+                        List<Appointment> history = facade.getPatientHistory(current.getPatientId());
+                        if (history != null && history.size() > 1) {
+                            qrText.append("\n--- Recent History ---\n");
+                            int count = 0;
+                            for(Appointment h : history) {
+                                if(h.getId() != current.getId() && count < 2) {
+                                    String hDate = (h.getAppointmentDate() != null && h.getAppointmentDate().length() >= 10)
+                                                   ? h.getAppointmentDate().substring(0,10) : "N/A";
+                                    qrText.append(hDate).append(": ").append(h.getTreatmentType()).append("\n");
+                                    count++;
+                                }
+                            }
+                        }
+                    } catch(Exception e) {}
                 %>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=<%= java.net.URLEncoder.encode(verifyUrl, "UTF-8") %>" alt="QR" class="border p-2 rounded-3 shadow-sm">
-                <p class="small text-muted mt-2 fw-bold" style="font-size: 0.65rem;">SECURE VERIFICATION TOKEN</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=<%= java.net.URLEncoder.encode(qrText.toString(), "UTF-8") %>" alt="QR" class="border p-2 rounded-3 shadow-sm">
+                <p class="small text-muted mt-2 fw-bold" style="font-size: 0.65rem;">OFFICIAL CLINICAL SUMMARY (SCAN TO VIEW)</p>
             </div>
 
             <div class="no-print d-flex gap-3 justify-content-center pt-4 border-top">

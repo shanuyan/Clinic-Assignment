@@ -118,4 +118,32 @@ public class AppointmentDAO {
         }
         return list;
     }
+
+    public List<Appointment> getAppointmentsByPatient(int patientId) throws SQLException {
+        List<Appointment> list = new ArrayList<>();
+        String query = "SELECT a.*, p.name as patient_name, u.full_name as dentist_name " +
+                       "FROM appointments a " +
+                       "LEFT JOIN patients p ON a.patient_id = p.id " +
+                       "LEFT JOIN users u ON a.dentist_id = u.id " +
+                       "WHERE a.patient_id = ? ORDER BY a.appointment_date DESC";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, patientId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Appointment appt = new Appointment();
+                appt.setId(rs.getInt("id"));
+                appt.setPatientId(rs.getInt("patient_id"));
+                appt.setTreatmentType(rs.getString("treatment_type"));
+                appt.setAppointmentDate(rs.getString("appointment_date"));
+                appt.setStatus(rs.getString("status"));
+                appt.setPatientName(rs.getString("patient_name"));
+                appt.setDentistName(rs.getString("dentist_name"));
+                appt.setClinicalNotes(rs.getString("clinical_notes"));
+                appt.setPrescribedMedicines(rs.getString("prescribed_medicines"));
+                list.add(appt);
+            }
+        }
+        return list;
+    }
 }

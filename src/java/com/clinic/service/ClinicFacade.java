@@ -58,6 +58,10 @@ public class ClinicFacade {
         return appointmentDAO.getAppointmentById(id);
     }
 
+    public List<Appointment> getPatientHistory(int patientId) throws Exception {
+        return appointmentDAO.getAppointmentsByPatient(patientId);
+    }
+
     public double getTreatmentCost(String treatment) throws Exception {
         Map<String, Double> prices = serviceDAO.getServicePrices();
         return prices.getOrDefault(treatment, 0.0);
