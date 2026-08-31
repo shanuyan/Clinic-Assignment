@@ -8,8 +8,8 @@ import java.util.List;
 
 public class PatientDAO {
     
-    public int addPatient(int customId, String name, String address, String phone) throws SQLException {
-        String query = "INSERT INTO patients (id, name, address, phone) VALUES (?, ?, ?, ?)";
+    public int addPatient(int customId, String name, String address, String phone, int age, String gender) throws SQLException {
+        String query = "INSERT INTO patients (id, name, address, phone, age, gender) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             
@@ -17,6 +17,8 @@ public class PatientDAO {
             ps.setString(2, name);
             ps.setString(3, address);
             ps.setString(4, phone);
+            ps.setInt(5, age);
+            ps.setString(6, gender);
             ps.executeUpdate();
             return customId;
         }
@@ -31,7 +33,8 @@ public class PatientDAO {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return new Patient(rs.getInt("id"), rs.getString("name"), 
-                                   rs.getString("address"), rs.getString("phone"));
+                                   rs.getString("address"), rs.getString("phone"),
+                                   rs.getInt("age"), rs.getString("gender"));
             }
         }
         return null;

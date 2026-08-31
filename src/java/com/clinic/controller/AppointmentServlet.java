@@ -29,7 +29,11 @@ public class AppointmentServlet extends HttpServlet {
                     String name = request.getParameter("name");
                     String address = request.getParameter("address");
                     String phone = request.getParameter("phone");
-                    patientId = facade.registerPatient(customId, name, address, phone);
+                    int age = 0;
+                    try { age = Integer.parseInt(request.getParameter("age")); } catch(Exception e) {}
+                    String gender = request.getParameter("sex");
+                    
+                    patientId = facade.registerPatient(customId, name, address, phone, age, gender);
                 }
 
                 if (patientId != -1) {

@@ -107,6 +107,18 @@
                                 <label class="form-label">Residential Address</label>
                                 <input type="text" name="address" class="form-control" placeholder="City, Street">
                             </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Age</label>
+                                <input type="number" name="age" class="form-control" placeholder="e.g. 25">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Sex (Gender)</label>
+                                <select name="sex" class="form-select">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>

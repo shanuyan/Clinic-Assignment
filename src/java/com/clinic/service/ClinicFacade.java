@@ -21,8 +21,8 @@ public class ClinicFacade {
     public String getUserRole(String u) { return userDAO.getUserRole(u); }
 
     // PATIENT
-    public int registerPatient(int id, String n, String a, String p) throws Exception {
-        return patientDAO.addPatient(id, n, a, p);
+    public int registerPatient(int id, String n, String a, String p, int age, String gender) throws Exception {
+        return patientDAO.addPatient(id, n, a, p, age, gender);
     }
 
     // APPOINTMENT

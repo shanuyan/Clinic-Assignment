@@ -16,7 +16,7 @@ public class DBInitializer implements ServletContextListener {
             
             // Create Core Tables
             stmt.execute("CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(50) UNIQUE, password VARCHAR(255), role VARCHAR(20), full_name VARCHAR(100), profile_image VARCHAR(255) DEFAULT 'default_avatar.png')");
-            stmt.execute("CREATE TABLE IF NOT EXISTS patients (id INT PRIMARY KEY, name VARCHAR(100), phone VARCHAR(20), address TEXT)");
+            stmt.execute("CREATE TABLE IF NOT EXISTS patients (id INT PRIMARY KEY, name VARCHAR(100), phone VARCHAR(20), address TEXT, age INT, gender VARCHAR(10))");
             stmt.execute("CREATE TABLE IF NOT EXISTS treatmentdetails (id INT PRIMARY KEY AUTO_INCREMENT, treatment_name VARCHAR(100), price DECIMAL(10,2))");
             
             // Create Appointments with proper columns
@@ -38,6 +38,12 @@ public class DBInitializer implements ServletContextListener {
                 stmt.execute("ALTER TABLE appointments ADD COLUMN clinical_notes TEXT");
                 stmt.execute("ALTER TABLE appointments ADD COLUMN prescribed_medicines TEXT");
             }
+            ResultSet rsP = md.getColumns(null, null, "patients", "age");
+            if (!rsP.next()) {
+                stmt.execute("ALTER TABLE patients ADD COLUMN age INT");
+                stmt.execute("ALTER TABLE patients ADD COLUMN gender VARCHAR(10)");
+            }
+
             ResultSet rsPR = md.getColumns(null, null, "password_requests", "request_time");
             if (!rsPR.next()) {
                 stmt.execute("ALTER TABLE password_requests ADD COLUMN request_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
