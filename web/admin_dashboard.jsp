@@ -62,6 +62,28 @@
         </div>
     </div>
 
+    <!-- Feedback Alerts -->
+    <% if(request.getParameter("status") != null || request.getParameter("error") != null) {
+        String status = request.getParameter("status");
+        String error = request.getParameter("error");
+        String msg = "";
+        String type = "success";
+
+        if("onboarded".equals(status)) msg = "System Identity provisioned successfully!";
+        else if("pass_updated".equals(status)) msg = "Access Key has been updated securely.";
+        else if("ticket_resolved".equals(status)) msg = "Security ticket marked as resolved.";
+        else if("rates_updated".equals(status)) msg = "Clinical pricing architecture updated.";
+        else if("treatment_added".equals(status)) msg = "New clinical procedure added to catalog.";
+
+        if("action_failed".equals(error)) { msg = "System error: Operation could not be completed."; type = "danger"; }
+
+        if(!msg.isEmpty()) { %>
+        <div class="alert alert-<%= type %> border-0 rounded-4 p-3 mb-4 shadow-sm animate-fade-in d-flex align-items-center">
+            <span class="me-3 fs-4"><%= "danger".equals(type) ? "❌" : "✅" %></span>
+            <div class="fw-bold"><%= msg %></div>
+        </div>
+    <% } } %>
+
     <!-- Stats Section -->
     <div class="row g-4 mb-5">
         <div class="col-md-3">

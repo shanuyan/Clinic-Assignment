@@ -146,6 +146,12 @@
                 </div>
             <% } %>
 
+            <% if("sent".equals(request.getParameter("report"))) { %>
+                <div class="alert alert-success border-0 rounded-4 p-3 mb-4 shadow-sm text-center fw-bold" style="background-color: #f0fdf4; color: #15803d; font-size: 0.875rem;">
+                    ✅ Recovery request transmitted to Administrator.
+                </div>
+            <% } %>
+
             <form action="auth" method="POST">
                 <input type="hidden" name="action" value="login">
 
