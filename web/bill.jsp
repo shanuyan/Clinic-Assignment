@@ -47,8 +47,20 @@
     </div>
 
     <% if("billed_success".equals(request.getParameter("status"))) { %>
-        <div class="alert alert-success border-0 rounded-4 p-3 mb-4 shadow-sm no-print">
-            <strong>Payment Settled!</strong> The invoice has been closed and archived successfully.
+        <div class="alert alert-success border-0 rounded-4 p-3 mb-4 shadow-sm no-print d-flex align-items-center animate-fade-in">
+            <span class="me-3 fs-4">💳</span>
+            <div>
+                <strong>Payment Settled!</strong> The invoice has been closed and archived successfully.
+            </div>
+        </div>
+    <% } %>
+
+    <% if("error".equals(request.getParameter("status"))) { %>
+        <div class="alert alert-danger border-0 rounded-4 p-3 mb-4 shadow-sm no-print d-flex align-items-center animate-fade-in">
+            <span class="me-3 fs-4">❌</span>
+            <div>
+                <strong>Transaction Failed:</strong> The billing operation could not be processed.
+            </div>
         </div>
     <% } %>
 

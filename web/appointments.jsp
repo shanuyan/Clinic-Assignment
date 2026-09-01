@@ -51,17 +51,32 @@
         <a href="dashboard.jsp" class="btn-secondary-soft">← Back to Overview</a>
     </div>
 
-    <% if(request.getParameter("success") != null) { %>
-        <div class="max-width-850 mx-auto mb-4">
-            <div class="alert alert-success border-0 rounded-4 p-4 shadow-sm d-flex align-items-center" style="background-color: #f0fdf4; color: #15803d;">
+    <!-- Feedback Alerts -->
+    <div class="max-width-850 mx-auto mb-4">
+        <% if("success".equals(request.getParameter("status"))) { %>
+            <div class="alert alert-success border-0 rounded-4 p-4 shadow-sm d-flex align-items-center animate-fade-in" style="background-color: #f0fdf4; color: #15803d;">
                 <div class="me-3 fs-3">✅</div>
                 <div>
-                    <strong class="d-block">Success!</strong>
-                    The session for Patient <strong>#<%= request.getParameter("pid") %></strong> is confirmed.
+                    <strong class="d-block">Registration Successful!</strong>
+                    The clinical session for Patient <strong>#<%= request.getParameter("pid") %></strong> has been confirmed and added to the queue.
                 </div>
             </div>
-        </div>
-    <% } %>
+        <% } else if("error".equals(request.getParameter("status"))) {
+            String errorMsg = "Operation failed. Please verify the input data.";
+            String type = request.getParameter("msg");
+            if("registration_failed".equals(type)) errorMsg = "Patient registration failed. ID might already exist.";
+            else if("appointment_failed".equals(type)) errorMsg = "Patient registered, but appointment scheduling failed.";
+            else if("server_error".equals(type)) errorMsg = "Internal system error. Please contact Administrator.";
+        %>
+            <div class="alert alert-danger border-0 rounded-4 p-4 shadow-sm d-flex align-items-center animate-fade-in" style="background-color: #fef2f2; color: #b91c1c;">
+                <div class="me-3 fs-3">❌</div>
+                <div>
+                    <strong class="d-block">Unsuccessful Attempt</strong>
+                    <%= errorMsg %>
+                </div>
+            </div>
+        <% } %>
+    </div>
 
     <div class="max-width-850 mx-auto text-center">
         <div class="type-selector">

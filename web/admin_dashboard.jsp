@@ -70,6 +70,7 @@
         String type = "success";
 
         if("onboarded".equals(status)) msg = "System Identity provisioned successfully!";
+        else if("logged_in".equals(status)) msg = "Authentication successful. Welcome back to the command center!";
         else if("pass_updated".equals(status)) msg = "Access Key has been updated securely.";
         else if("ticket_resolved".equals(status)) msg = "Security ticket marked as resolved.";
         else if("rates_updated".equals(status)) msg = "Clinical pricing architecture updated.";

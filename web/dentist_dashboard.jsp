@@ -29,15 +29,35 @@
         </div>
     </div>
 
+    <% if("logged_in".equals(request.getParameter("status"))) { %>
+        <div class="alert alert-success border-0 rounded-4 p-3 mb-4 shadow-sm animate-fade-in d-flex align-items-center">
+            <span class="me-3 fs-4">👨‍⚕️</span>
+            <div class="fw-bold">Login Successful! Welcome to your clinical workspace.</div>
+        </div>
+    <% } %>
+
     <% if("session_saved".equals(request.getParameter("status"))) { %>
-        <div class="alert alert-success border-0 rounded-4 p-3 mb-4 shadow-sm">
-            <strong>Session Finalized!</strong> The clinical report has been sent to the Finance department for billing.
+        <div class="alert alert-success border-0 rounded-4 p-3 mb-4 shadow-sm d-flex align-items-center animate-fade-in">
+            <span class="me-3 fs-4">✅</span>
+            <div>
+                <strong>Session Finalized!</strong> The clinical report has been sent to the Finance department for billing.
+            </div>
         </div>
     <% } %>
 
     <% if("unavailability_reported".equals(request.getParameter("status"))) { %>
-        <div class="alert alert-info border-0 rounded-4 p-3 mb-4 shadow-sm">
-            <strong>Notified!</strong> Your unavailability has been reported to the System Administrator.
+        <div class="alert alert-info border-0 rounded-4 p-3 mb-4 shadow-sm d-flex align-items-center animate-fade-in">
+            <span class="me-3 fs-4">📅</span>
+            <div>
+                <strong>Notified!</strong> Your unavailability has been reported to the System Administrator.
+            </div>
+        </div>
+    <% } %>
+
+    <% if("error".equals(request.getParameter("status"))) { %>
+        <div class="alert alert-danger border-0 rounded-4 p-3 mb-4 shadow-sm d-flex align-items-center animate-fade-in">
+            <span class="me-3 fs-4">❌</span>
+            <div class="fw-bold">Operation failed: Clinical data could not be transmitted.</div>
         </div>
     <% } %>
 

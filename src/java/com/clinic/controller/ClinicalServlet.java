@@ -27,19 +27,29 @@ public class ClinicalServlet extends HttpServlet {
                     int apptId = Integer.parseInt(apptIdStr);
                     facade.finalizeClinicalSession(apptId, notes, medicines);
                     response.sendRedirect("dentist_dashboard.jsp?status=session_saved");
+                } else {
+                    response.sendRedirect("dentist_dashboard.jsp?status=error&msg=missing_id");
                 }
                 
             } else if ("process_bill".equals(action)) {
                 int apptId = Integer.parseInt(request.getParameter("apptId"));
-                facade.markAsBilled(apptId);
-                response.sendRedirect("bill.jsp?status=billed_success");
+                boolean billed = facade.markAsBilled(apptId);
+                if (billed) {
+                    response.sendRedirect("bill.jsp?status=billed_success");
+                } else {
+                    response.sendRedirect("bill.jsp?status=error&msg=billing_failed");
+                }
                 
             } else if ("report_unavailability".equals(action)) {
                 String user = (String) request.getSession().getAttribute("user");
                 String date = request.getParameter("unavailable_date");
                 String reason = request.getParameter("reason");
-                facade.reportUnavailability(user, date, reason);
-                response.sendRedirect("dentist_dashboard.jsp?status=unavailability_reported");
+                try {
+                    facade.reportUnavailability(user, date, reason);
+                    response.sendRedirect("dentist_dashboard.jsp?status=unavailability_reported");
+                } catch (Exception e) {
+                    response.sendRedirect("dentist_dashboard.jsp?status=error&msg=report_failed");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

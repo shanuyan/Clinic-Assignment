@@ -41,13 +41,13 @@ public class AuthServlet extends HttpServlet {
                 
                 switch (role) {
                     case "ADMIN":
-                        response.sendRedirect("admin_dashboard.jsp");
+                        response.sendRedirect("admin_dashboard.jsp?status=logged_in");
                         break;
                     case "DENTIST":
-                        response.sendRedirect("dentist_dashboard.jsp");
+                        response.sendRedirect("dentist_dashboard.jsp?status=logged_in");
                         break;
                     case "STAFF":
-                        response.sendRedirect("staff_dashboard.jsp");
+                        response.sendRedirect("staff_dashboard.jsp?status=logged_in");
                         break;
                     default:
                         response.sendRedirect("index.jsp?error=unauthorized");

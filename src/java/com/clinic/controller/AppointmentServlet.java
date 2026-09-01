@@ -41,15 +41,19 @@ public class AppointmentServlet extends HttpServlet {
                     String date = request.getParameter("date");
                     String treatment = request.getParameter("treatment");
 
-                    facade.scheduleAppointment(patientId, dentistId, date, treatment);
-                    response.sendRedirect("appointments.jsp?success=true&pid=" + patientId);
+                    boolean scheduled = facade.scheduleAppointment(patientId, dentistId, date, treatment);
+                    if (scheduled) {
+                        response.sendRedirect("appointments.jsp?status=success&pid=" + patientId);
+                    } else {
+                        response.sendRedirect("appointments.jsp?status=error&msg=appointment_failed");
+                    }
                 } else {
-                    response.sendRedirect("appointments.jsp?error=reg_failed");
+                    response.sendRedirect("appointments.jsp?status=error&msg=registration_failed");
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("appointments.jsp?error=server_error");
+            response.sendRedirect("appointments.jsp?status=error&msg=server_error");
         }
     }
 }

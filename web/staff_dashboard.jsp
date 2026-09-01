@@ -23,6 +23,13 @@
         </div>
     </div>
 
+    <% if("logged_in".equals(request.getParameter("status"))) { %>
+        <div class="alert alert-success border-0 rounded-4 p-3 mb-4 shadow-sm animate-fade-in d-flex align-items-center">
+            <span class="me-3 fs-4">👋</span>
+            <div class="fw-bold">Login Successful! Welcome back to the front desk.</div>
+        </div>
+    <% } %>
+
     <div class="row g-4 mb-5">
         <div class="col-md-6">
             <div class="card p-5 border-0 shadow-sm h-100">
