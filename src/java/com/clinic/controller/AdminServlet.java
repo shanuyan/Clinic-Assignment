@@ -104,17 +104,25 @@ public class AdminServlet extends HttpServlet {
                 while(params.hasMoreElements()){
                     String paramName = params.nextElement();
                     if(paramName.startsWith("rate_")){
+                        // Decoding space-to-underscore replacement from JSP
                         String serviceName = paramName.substring(5).replace("_", " ");
-                        double price = Double.parseDouble(request.getParameter(paramName));
-                        newRates.put(serviceName, price);
+                        try {
+                            double price = Double.parseDouble(request.getParameter(paramName));
+                            newRates.put(serviceName, price);
+                        } catch(Exception pe) {}
                     }
                 }
-                facade.updateRates(newRates);
+                if (!newRates.isEmpty()) {
+                    facade.updateRates(newRates);
+                }
                 response.sendRedirect("admin_dashboard.jsp?status=rates_updated");
             } else if ("add_treatment".equals(action)) {
                 String name = request.getParameter("serviceName");
-                double price = Double.parseDouble(request.getParameter("servicePrice"));
-                facade.addTreatmentType(name, price);
+                String priceStr = request.getParameter("servicePrice");
+                if (name != null && !name.trim().isEmpty() && priceStr != null) {
+                    double price = Double.parseDouble(priceStr);
+                    facade.addTreatmentType(name.trim(), price);
+                }
                 response.sendRedirect("admin_dashboard.jsp?status=treatment_added");
             }
         } catch (Exception e) {

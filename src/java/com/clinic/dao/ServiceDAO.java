@@ -8,7 +8,7 @@ public class ServiceDAO {
     
     public Map<String, Double> getServicePrices() throws SQLException {
         Map<String, Double> prices = new LinkedHashMap<>(); 
-        String query = "SELECT treatment_name, price FROM treatmentdetails ORDER BY id ASC";
+        String query = "SELECT treatment_name, price FROM treatment_details ORDER BY id ASC";
         try (Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
@@ -20,7 +20,7 @@ public class ServiceDAO {
     }
 
     public boolean updateServicePrice(String name, double price) throws SQLException {
-        String query = "UPDATE treatmentdetails SET price = ? WHERE treatment_name = ?";
+        String query = "UPDATE treatment_details SET price = ? WHERE treatment_name = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setDouble(1, price);
@@ -30,7 +30,7 @@ public class ServiceDAO {
     }
 
     public boolean addNewService(String name, double price) throws SQLException {
-        String query = "INSERT INTO treatmentdetails (treatment_name, price) VALUES (?, ?)";
+        String query = "INSERT INTO treatment_details (treatment_name, price) VALUES (?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, name);
@@ -40,21 +40,22 @@ public class ServiceDAO {
     }
     
     public void seedServices() throws SQLException {
-        String check = "SELECT COUNT(*) FROM treatmentdetails";
+        // This is called during initialization to ensure base prices exist
+        String check = "SELECT COUNT(*) FROM treatment_details";
         try (Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(check)) {
             if (rs.next() && rs.getInt(1) == 0) {
-                stmt.execute("INSERT INTO treatmentdetails (treatment_name, price) VALUES " +
+                stmt.execute("INSERT INTO treatment_details (treatment_name, price) VALUES " +
                         "('Consultation', 1500.00), " +
                         "('Prophylaxis (Cleaning)', 2500.00), " +
                         "('Composite Filling', 3500.00), " +
                         "('Endodontic Therapy', 15000.00), " +
                         "('Surgical Extraction', 8000.00), " +
-                        "('Orthodontic Adj', 5000.00), " +
-                        "('Teeth Whitening', 25000.00), " +
-                        "('Dental Implant', 120000.00)");
+                        "('Orthodontic Adj', 5000.00)");
             }
+        } catch (Exception e) {
+            // Table might not exist yet during the very first run, which is handled by DBInitializer
         }
     }
 }
