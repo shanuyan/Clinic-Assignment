@@ -9,6 +9,11 @@ import java.util.List;
 public class PatientDAO {
     
     public int addPatient(int customId, String name, String address, String phone, int age, String gender) throws SQLException {
+        // Validation: Check if ID already exists to prevent duplication
+        if (isIdExists(customId)) {
+            return -1; // Special code for duplicate ID
+        }
+        
         String query = "INSERT INTO patients (id, name, address, phone, age, gender) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
@@ -21,6 +26,16 @@ public class PatientDAO {
             ps.setString(6, gender);
             ps.executeUpdate();
             return customId;
+        }
+    }
+
+    public boolean isIdExists(int id) throws SQLException {
+        String query = "SELECT id FROM patients WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
         }
     }
 

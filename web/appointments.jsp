@@ -66,6 +66,9 @@
             String type = request.getParameter("msg");
             if("registration_failed".equals(type)) errorMsg = "Patient registration failed. ID might already exist.";
             else if("appointment_failed".equals(type)) errorMsg = "Patient registered, but appointment scheduling failed.";
+            else if("missing_fields".equals(type)) errorMsg = "Mandatory fields (Name/ID) are missing. Please complete the form.";
+            else if("patient_not_found".equals(type)) errorMsg = "No record found for the provided Patient ID. Please register as a New Patient.";
+            else if("invalid_phone".equals(type)) errorMsg = "Invalid contact number. Please enter exactly 10 digits.";
             else if("server_error".equals(type)) errorMsg = "Internal system error. Please contact Administrator.";
         %>
             <div class="alert alert-danger border-0 rounded-4 p-4 shadow-sm d-flex align-items-center animate-fade-in" style="background-color: #fef2f2; color: #b91c1c;">
@@ -112,11 +115,12 @@
                             </div>
                             <div class="col-md-8">
                                 <label class="form-label">Legal Full Name</label>
-                                <input type="text" name="name" class="form-control" placeholder="Alex Pandian">
+                                <input type="text" name="name" class="form-control" placeholder="Alex Pandian" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Contact Number</label>
-                                <input type="text" name="phone" class="form-control" placeholder="+94 ...">
+                                <input type="tel" name="phone" class="form-control" placeholder="07xxxxxxxx" pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" required>
+                                <small class="text-muted" style="font-size: 10px;">Format: 10 digits (e.g., 0771234567)</small>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Residential Address</label>
@@ -189,23 +193,35 @@
             const newBtn = document.getElementById('newBtn');
             const existBtn = document.getElementById('existBtn');
             
-            const newIdInput = document.querySelector('input[name="new_patient_id"]');
-            const existIdInput = document.querySelector('input[name="existing_patient_id"]');
+            // Get all inputs inside the NEW fields container
+            const newInputs = newFields.querySelectorAll('input, select');
+            const existInput = existFields.querySelector('input[name="existing_patient_id"]');
 
             if (mode === 'NEW') {
                 newFields.style.display = 'block';
                 existFields.style.display = 'none';
                 newBtn.classList.add('active');
                 existBtn.classList.remove('active');
-                if (newIdInput) newIdInput.required = true;
-                if (existIdInput) existIdInput.required = false;
+
+                // Enable validation for NEW fields, disable for EXISTING
+                newInputs.forEach(input => {
+                    if (input.name === 'new_patient_id' || input.name === 'name' || input.name === 'phone') {
+                        input.required = true;
+                    }
+                });
+                existInput.required = false;
+                existInput.value = ""; // Clear existing input
             } else {
                 newFields.style.display = 'none';
                 existFields.style.display = 'block';
                 newBtn.classList.remove('active');
                 existBtn.classList.add('active');
-                if (newIdInput) newIdInput.required = false;
-                if (existIdInput) existIdInput.required = true;
+
+                // Disable validation for NEW fields, enable for EXISTING
+                newInputs.forEach(input => {
+                    input.required = false;
+                });
+                existInput.required = true;
             }
         }
     </script>

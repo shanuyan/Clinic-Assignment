@@ -25,6 +25,10 @@ public class ClinicFacade {
         return patientDAO.addPatient(id, n, a, p, age, gender);
     }
 
+    public boolean isPatientRegistered(int id) throws Exception {
+        return patientDAO.isIdExists(id);
+    }
+
     // APPOINTMENT
     public boolean scheduleAppointment(int pId, int dId, String date, String treat) throws Exception {
         Appointment appt = new Appointment();

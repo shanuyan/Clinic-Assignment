@@ -23,15 +23,41 @@ public class AppointmentServlet extends HttpServlet {
                 int patientId = -1;
 
                 if ("EXISTING".equals(mode)) {
-                    patientId = Integer.parseInt(request.getParameter("existing_patient_id"));
+                    String existingId = request.getParameter("existing_patient_id");
+                    if (existingId == null || existingId.trim().isEmpty()) {
+                        response.sendRedirect("appointments.jsp?status=error&msg=missing_fields");
+                        return;
+                    }
+                    patientId = Integer.parseInt(existingId);
+                    
+                    // Critical Fix: Verify if this existing ID actually exists in the DB
+                    if (!facade.isPatientRegistered(patientId)) {
+                        response.sendRedirect("appointments.jsp?status=error&msg=patient_not_found");
+                        return;
+                    }
                 } else {
-                    int customId = Integer.parseInt(request.getParameter("new_patient_id"));
+                    String customIdStr = request.getParameter("new_patient_id");
                     String name = request.getParameter("name");
+                    String ageStr = request.getParameter("age");
+                    String gender = request.getParameter("sex");
+                    
+                    if (name == null || name.trim().isEmpty() || customIdStr == null || customIdStr.trim().isEmpty()) {
+                        response.sendRedirect("appointments.jsp?status=error&msg=missing_fields");
+                        return;
+                    }
+
+                    int customId = Integer.parseInt(customIdStr);
                     String address = request.getParameter("address");
                     String phone = request.getParameter("phone");
+                    
+                    // Server-side numeric validation for phone
+                    if (phone != null && !phone.matches("\\d{10}")) {
+                        response.sendRedirect("appointments.jsp?status=error&msg=invalid_phone");
+                        return;
+                    }
+
                     int age = 0;
-                    try { age = Integer.parseInt(request.getParameter("age")); } catch(Exception e) {}
-                    String gender = request.getParameter("sex");
+                    try { age = Integer.parseInt(ageStr); } catch(Exception e) {}
                     
                     patientId = facade.registerPatient(customId, name, address, phone, age, gender);
                 }

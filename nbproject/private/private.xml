@@ -5,10 +5,14 @@
         <group>
             <file>file:/C:/Users/Paruj/Documents/GitHub/Clinic-Assignment/web/index.jsp</file>
             <file>file:/C:/Users/Paruj/Documents/GitHub/Clinic-Assignment/src/java/com/clinic/dao/AppointmentDAO.java</file>
+            <file>file:/C:/Users/Paruj/Documents/GitHub/Clinic-Assignment/src/java/com/clinic/util/DBConnection.java</file>
+            <file>file:/C:/Users/Paruj/Documents/GitHub/Clinic-Assignment/src/java/com/clinic/dao/UserDAO.java</file>
             <file>file:/C:/Users/Paruj/Documents/GitHub/Clinic-Assignment/web/admin_dashboard.jsp</file>
             <file>file:/C:/Users/Paruj/Documents/GitHub/Clinic-Assignment/web/dentist_dashboard.jsp</file>
+            <file>file:/C:/Users/Paruj/Documents/GitHub/Clinic-Assignment/src/java/com/clinic/service/ClinicFacade.java</file>
             <file>file:/C:/Users/Paruj/Documents/GitHub/Clinic-Assignment/web/dashboard.jsp</file>
             <file>file:/C:/Users/Paruj/Documents/GitHub/Clinic-Assignment/web/staff_dashboard.jsp</file>
+            <file>file:/C:/Users/Paruj/Documents/GitHub/Clinic-Assignment/src/java/com/clinic/util/SecurityFilter.java</file>
             <file>file:/C:/Users/Paruj/Documents/GitHub/Clinic-Assignment/web/index.html</file>
         </group>
     </open-files>
